@@ -165,7 +165,7 @@ resource "aws_route" "private_nat_gateway" {
 }
 
 resource "aws_route" "database_nat_gateway" {
-  route_table_id = aws_route_table.databse.id
+  route_table_id = aws_route_table.database.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id = aws_nat_gateway.nat.id
 }
@@ -185,6 +185,6 @@ resource "aws_route_table_association" "private" {
 
 resource "aws_route_table_association" "database" {
   count = length(var.database_subnet_cidrs)
-  subnet_id = element(aws_subnet.databse_subnet[*].id, count.index)
+  subnet_id = element(aws_subnet.database_subnet[*].id, count.index)
   route_table_id = aws_route_table.database.id
 }

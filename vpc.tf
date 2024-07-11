@@ -33,9 +33,7 @@ resource "aws_internet_gateway" "ig" {
 /*** Elastic IP for NAT Gateway ***/
 resource "aws_eip" "nat_eip" {
   domain = "vpc"
-  depends_on = [ aws_internet_gateway.ig ]
-   # To ensure proper ordering, it is recommended to add an explicit dependency
-  # on the Internet Gateway for the VPC.
+  #depends_on = [ aws_internet_gateway.ig ]
 }
 
 /*** NAT Gateway for the private subnets ***/
@@ -50,6 +48,10 @@ resource "aws_nat_gateway" "nat" {
       Name = "${local.resource_name}"
     }
   )
+
+  depends_on = [ aws_internet_gateway.ig ]
+  # To ensure proper ordering, it is recommended to add an explicit dependency
+  # on the Internet Gateway for the VPC.
 }
 
 /*** Public subnet ***/
@@ -188,3 +190,4 @@ resource "aws_route_table_association" "database" {
   subnet_id = element(aws_subnet.database_subnet[*].id, count.index)
   route_table_id = aws_route_table.database.id
 }
+
